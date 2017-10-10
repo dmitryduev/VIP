@@ -3,7 +3,10 @@ Code with the Isotropic Undecimated Wavelet Transform, taken (Aug 24, 2015) from
 https://github.com/ratt-ru/PyMORESANE/
 Credits to J. S. Kenyon
 """
+from __future__ import division
 
+from builtins import range
+from past.utils import old_div
 import numpy as np
 import multiprocessing as mp
 import ctypes
@@ -70,7 +73,7 @@ def ser_iuwt_decomposition(in1, scale_count, scale_adjust, store_smoothed):
     C0                  (optional):     Array containing the smoothest version of the input.
     """
 
-    wavelet_filter = (1./16)*np.array([1,4,6,4,1])      # Filter-bank for use in the a trous algorithm.
+    wavelet_filter = (old_div(1.,16))*np.array([1,4,6,4,1])      # Filter-bank for use in the a trous algorithm.
 
     # Initialises an empty array to store the coefficients.
 
@@ -115,7 +118,7 @@ def ser_iuwt_recomposition(in1, scale_adjust, smoothed_array):
     recomposition                   Array containing the reconstructed image.
     """
 
-    wavelet_filter = (1./16)*np.array([1,4,6,4,1])      # Filter-bank for use in the a trous algorithm.
+    wavelet_filter = (old_div(1.,16))*np.array([1,4,6,4,1])      # Filter-bank for use in the a trous algorithm.
 
     # Determines scale with adjustment and creates a zero array to store the output, unless smoothed_array is given.
 
@@ -199,7 +202,7 @@ def mp_iuwt_decomposition(in1, scale_count, scale_adjust, store_smoothed, core_c
     C0                  (optional):     Array containing the smoothest version of the input.
     """
 
-    wavelet_filter = (1./16)*np.array([1,4,6,4,1])      # Filter-bank for use in the a trous algorithm.
+    wavelet_filter = (old_div(1.,16))*np.array([1,4,6,4,1])      # Filter-bank for use in the a trous algorithm.
 
     C0 = in1                                            # Sets the initial value to be the input array.
 
@@ -245,7 +248,7 @@ def mp_iuwt_recomposition(in1, scale_adjust, core_count, smoothed_array):
     recomposiiton                   Array containing the reconstructed image.
     """
 
-    wavelet_filter = (1./16)*np.array([1,4,6,4,1])      # Filter-bank for use in the a trous algorithm.
+    wavelet_filter = (old_div(1.,16))*np.array([1,4,6,4,1])      # Filter-bank for use in the a trous algorithm.
 
     # Determines scale with adjustment and creates a zero array to store the output, unless smoothed_array is given.
 
