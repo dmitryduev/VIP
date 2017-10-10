@@ -6,6 +6,7 @@ Module with sigma clipping functions.
 
 from __future__ import division, print_function
 
+from builtins import range
 __author__ = 'C. Gomez @ ULg', 'V. Christiaens'
 __all__ = ['clip_array',
            'sigma_filter']

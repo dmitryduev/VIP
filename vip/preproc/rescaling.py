@@ -3,6 +3,9 @@
 """
 Module with frame resampling/rescaling functions.
 """
+from __future__ import division
+from builtins import range
+from past.utils import old_div
 __author__ = 'C. Gomez @ ULg, V. Christiaens @ ULg'
 __all__ = ['frame_px_resampling',
            'cube_px_resampling',
@@ -86,16 +89,16 @@ def frame_px_resampling(array, scale, imlib='opencv', interpolation='bicubic',
                     "scale_y is too small; resulting array would be 0 size.")
             # final size is decimal? => make it integer
             if new_ny % 1 > 0.5:
-                scale_y = (new_ny + 1 - (new_ny % 1)) / ny
+                scale_y = old_div((new_ny + 1 - (new_ny % 1)), ny)
             elif new_ny % 1 > 0:
-                scale_y = (new_ny - (new_ny % 1)) / ny
+                scale_y = old_div((new_ny - (new_ny % 1)), ny)
             new_ny = ny * scale_y
             # final size is even?
             if new_ny % 2 == 0:
                 if scale_y > 1:  # if upscaling => go to closest odd with even-1
-                    scale_y = float(new_ny - 1) / ny
+                    scale_y = old_div(float(new_ny - 1), ny)
                 else:
-                    scale_y = float(new_ny + 1) / ny
+                    scale_y = old_div(float(new_ny + 1), ny)
                     # if downscaling => go to closest odd with even+1 (reversible)
 
         if nx % 2 != 0:  # original x size is odd?
@@ -105,16 +108,16 @@ def frame_px_resampling(array, scale, imlib='opencv', interpolation='bicubic',
                     "scale_x is too small; resulting array would be 0 size.")
             # final size is decimal? => make it integer
             if new_nx % 1 > 0.5:
-                scale_x = (new_nx + 1 - (new_nx % 1)) / nx
+                scale_x = old_div((new_nx + 1 - (new_nx % 1)), nx)
             elif new_nx % 1 > 0:
-                scale_x = (new_nx - (new_nx % 1)) / nx
+                scale_x = old_div((new_nx - (new_nx % 1)), nx)
             new_nx = nx * scale_x
             # final size is even?
             if new_nx % 2 == 0:
                 if scale_x > 1:  # if upscaling => go to closest odd with even-1
-                    scale_x = float(new_nx - 1) / nx
+                    scale_x = old_div(float(new_nx - 1), nx)
                 else:  # if downscaling => go to closest odd with even+1 (reversible)
-                    scale_x = float(new_nx + 1) / nx
+                    scale_x = old_div(float(new_nx + 1), nx)
 
 
 
@@ -275,8 +278,8 @@ def frame_rescaling(array, ref_y=None, ref_x=None, scale=1.0,
             scaling_y = scaling
         if scaling_x is None:
             scaling_x = scaling
-        return (ref_y+((output_coords[0]-ref_y)/scaling_y), 
-                ref_x+((output_coords[1]-ref_x)/scaling_x))
+        return (ref_y+(old_div((output_coords[0]-ref_y),scaling_y)), 
+                ref_x+(old_div((output_coords[1]-ref_x),scaling_x)))
     #---------------------------------------------------------------------------
     if not array.ndim == 2:
         raise TypeError('Input array is not a frame or 2d array.')
@@ -404,7 +407,7 @@ def check_scal_vector(scal_vec):
 
     if correct:
         for ii in range(nz):
-            scal_vec[ii] = scal_vec[ii]/scal_min
+            scal_vec[ii] = old_div(scal_vec[ii],scal_min)
 
     return scal_vec
 

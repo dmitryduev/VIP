@@ -3,7 +3,10 @@
 """
 Module with the function of merit definitions for the NEGFC optimization.
 """
+from __future__ import division
+from __future__ import print_function
 
+from past.utils import old_div
 import numpy as np
 from skimage.draw import circle
 from ..phot import inject_fcs_cube
@@ -87,7 +90,7 @@ def chisquare(modelParameters, cube, angs, plsc, psfs_norm, fwhm, annulus_width,
         values = np.abs(values)
         chi2 = np.sum(values[values>0])
         N =len(values[values>0])    
-        return chi2/(N-3)
+        return old_div(chi2,(N-3))
     elif fmerit=='stddev':
         return np.std(values[values!=0]) 
     else:
@@ -148,7 +151,7 @@ def get_values_optimize(cube, angs, ncomp, annulus_width, aperture_radius,
     centy_fr, centx_fr = frame_center(cube[0])
     posy = r_guess * np.sin(np.deg2rad(theta_guess)) + centy_fr
     posx = r_guess * np.cos(np.deg2rad(theta_guess)) + centx_fr
-    halfw = max(aperture_radius, annulus_width/2.)
+    halfw = max(aperture_radius, old_div(annulus_width,2.))
 
     # Checking annulus/aperture sizes. Assuming square frames
     msg = 'The annulus and/or the circular aperture used by the NegFC falls '

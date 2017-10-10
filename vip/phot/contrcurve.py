@@ -6,6 +6,9 @@ Module with contrast curve generation function.
 
 from __future__ import division, print_function
 
+from builtins import zip
+from builtins import str
+from builtins import range
 __author__ = 'C. Gomez, O. Absil @ ULg'
 __all__ = ['contrast_curve',
            'noise_per_annulus',
@@ -155,10 +158,10 @@ def contrast_curve(cube, angle_list, psf_template, fwhm, pxscale, starphot,
         if isinstance(starphot, float) or isinstance(starphot, int):
             msg0 = 'ALGO : {}, FWHM = {}, # BRANCHES = {}, SIGMA = {},'
             msg0 += ' STARPHOT = {}'
-            print(msg0.format(algo.func_name, fwhm, nbranch, sigma, starphot))
+            print(msg0.format(algo.__name__, fwhm, nbranch, sigma, starphot))
         else:
             msg0 = 'ALGO : {}, FWHM = {}, # BRANCHES = {}, SIGMA = {}'
-            print(msg0.format(algo.func_name, fwhm, nbranch, sigma))
+            print(msg0.format(algo.__name__, fwhm, nbranch, sigma))
         print(sep)
 
     # throughput
@@ -470,7 +473,7 @@ def throughput(cube, angle_list, psf_template, fwhm, pxscale, algo, nbranch=1,
 
     if verbose:
         msg1 = 'Cube without fake companions processed with {:}'
-        print(msg1.format(algo.func_name))
+        print(msg1.format(algo.__name__))
         timing(start_time)
 
     noise, vector_radd = noise_per_annulus(frame_nofc, separation=fwhm,
@@ -536,7 +539,7 @@ def throughput(cube, angle_list, psf_template, fwhm, pxscale, algo, nbranch=1,
             if verbose:
                 msg3 = 'Cube with fake companions processed with {:}'
                 msg3 += '\nMeasuring its annulus-wise throughput'
-                print(msg3.format(algo.func_name))
+                print(msg3.format(algo.__name__))
                 timing(start_time)
 
             #*******************************************************************

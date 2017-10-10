@@ -6,6 +6,7 @@ Module with frame/cube filtering functionalities
 
 from __future__ import division
 
+from builtins import range
 __author__ = 'C. Gomez @ ULg'
 __all__ = ['frame_filter_highpass',
            'frame_filter_lowpass',

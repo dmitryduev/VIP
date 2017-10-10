@@ -1,5 +1,8 @@
 #! /usr/bin/env python
 
+from __future__ import print_function
+from builtins import str
+from builtins import range
 __author__ = 'G. Ruane'
 __all__ = ['register_and_center_via_speckles']
 
@@ -67,8 +70,8 @@ min_spat_freq = 0.5, max_spat_freq = 3, fwhm = 8., debug = False , NegFit = True
         cube_ref_subframe=cube_crop_frames(cube_ref, subframesize, verbose=False) 
     
     ceny,cenx = frame_center(cube_sci_subframe[0,:,:])
-    print 'sub frame is '+str(cube_sci_subframe.shape[1])+'x'+str(cube_sci_subframe.shape[2])
-    print 'center pixel is ('+str(ceny)+', '+str(cenx)+')'
+    print('sub frame is '+str(cube_sci_subframe.shape[1])+'x'+str(cube_sci_subframe.shape[2]))
+    print('center pixel is ('+str(ceny)+', '+str(cenx)+')')
     
     # Make a copy of the sci and ref frames, filter them, will be used for alignment purposes
     cube_sci_lpf = cube_sci_subframe.copy()
@@ -117,16 +120,16 @@ min_spat_freq = 0.5, max_spat_freq = 3, fwhm = 8., debug = False , NegFit = True
             yshift = ceny - (y1 + y_i)
             xshift = cenx - (x1 + x_i)
     
-            print yshift,xshift
+            print(yshift,xshift)
             alignment_cube[0,:,:] = frame_shift(alignment_cube[0,:,:], yshift, xshift, imlib=imlib, interpolation=interpolation)
         
         # center the cube with stretched values
         _,y_shift,x_shift = cube_recenter_dft_upsampling(np.log10((abs(alignment_cube)+1)**(gammaval)), ceny, cenx, fwhm=fwhm, 
                                          subi_size=None, full_output=True, verbose=False, save_shifts=False, debug=False)   
         
-        print '\nSquare sum of shift vecs: '+str(np.sum(np.sqrt(y_shift**2+x_shift**2)))
+        print('\nSquare sum of shift vecs: '+str(np.sum(np.sqrt(y_shift**2+x_shift**2))))
         
-        for i in xrange(1, n_frames):
+        for i in range(1, n_frames):
             alignment_cube[i] = frame_shift(alignment_cube[i], y_shift[i], x_shift[i], imlib=imlib, interpolation=interpolation)
         
         cum_y_shifts = cum_y_shifts + y_shift

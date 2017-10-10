@@ -3,7 +3,12 @@
 """
 Module with the MCMC (``emcee``) sampling for NEGFC parameter estimation.
 """
+from __future__ import division
+from __future__ import print_function
 
+from builtins import str
+from builtins import range
+from past.utils import old_div
 __author__ = 'O. Wertz, C. Gomez @ ULg'
 __all__ = ['lnprior',
            'lnlike',
@@ -258,19 +263,19 @@ def gelman_rubin(x):
         return
 
     # Calculate between-chain variance
-    B_over_n = np.sum((np.mean(x, 1) - np.mean(x)) ** 2) / (m - 1)
+    B_over_n = old_div(np.sum((np.mean(x, 1) - np.mean(x)) ** 2), (m - 1))
 
     # Calculate within-chain variances
-    W = np.sum([(x[i] - xbar) ** 2 for i, xbar in enumerate(np.mean(x,
-                                                           1))]) / (m * (n - 1))
+    W = old_div(np.sum([(x[i] - xbar) ** 2 for i, xbar in enumerate(np.mean(x,
+                                                           1))]), (m * (n - 1)))
     # (over) estimate of variance
     s2 = W * (n - 1) / n + B_over_n
 
     # Pooled posterior variance estimate
-    V = s2 + B_over_n / m
+    V = s2 + old_div(B_over_n, m)
 
     # Calculate PSRF
-    R = V / W
+    R = old_div(V, W)
 
     return R
 
@@ -430,8 +435,8 @@ def mcmc_negfc_sampling(cubes, angs, psfn, ncomp, plsc, initial_state,
     """ 
     if verbose:
         start_time = time_ini()
-        print "        MCMC sampler for the NEGFC technique       "
-        print sep
+        print("        MCMC sampler for the NEGFC technique       ")
+        print(sep)
 
     # If required, one create the output folder.    
     if save:    
@@ -462,7 +467,7 @@ def mcmc_negfc_sampling(cubes, angs, psfn, ncomp, plsc, initial_state,
             psfn = open_fits(psfn)
         
         if verbose:
-            print 'The data has been loaded. Let''s continue !'
+            print('The data has been loaded. Let''s continue !')
     
     # #########################################################################
     # Initialization of the variables
@@ -495,7 +500,7 @@ def mcmc_negfc_sampling(cubes, angs, psfn, ncomp, plsc, initial_state,
     
 
     if bounds is None:
-        bounds = [(initial_state[0]-annulus_width/2.,initial_state[0]+annulus_width/2.), #radius
+        bounds = [(initial_state[0]-old_div(annulus_width,2.),initial_state[0]+old_div(annulus_width,2.)), #radius
                   (initial_state[1]-10,initial_state[1]+10), #angle
                   (0,2*initial_state[2])] #flux
     
@@ -513,9 +518,9 @@ def mcmc_negfc_sampling(cubes, angs, psfn, ncomp, plsc, initial_state,
     # Affine Invariant MCMC run
     # ######################################################################### 
     if verbose:
-        print ''
-        print 'Start of the MCMC run ...'
-        print 'Step  |  Duration/step (sec)  |  Remaining Estimated Time (sec)'
+        print('')
+        print('Start of the MCMC run ...')
+        print('Step  |  Duration/step (sec)  |  Remaining Estimated Time (sec)')
                              
     for k, res in enumerate(sampler.sample(pos,iterations=nIterations,
                                            storechain=True)):
@@ -525,7 +530,7 @@ def mcmc_negfc_sampling(cubes, angs, psfn, ncomp, plsc, initial_state,
                 q = 0.5
             else:
                 q = 1
-            print '{}\t\t{:.5f}\t\t\t{:.5f}'.format(k,elapsed*q,elapsed*(limit-k-1)*q)
+            print('{}\t\t{:.5f}\t\t\t{:.5f}'.format(k,elapsed*q,elapsed*(limit-k-1)*q))
             
         start = datetime.datetime.now()
 
@@ -549,8 +554,8 @@ def mcmc_negfc_sampling(cubes, angs, psfn, ncomp, plsc, initial_state,
    
         if k == criterion:
             if verbose:
-                print ''
-                print '   Gelman-Rubin statistic test in progress ...' 
+                print('')
+                print('   Gelman-Rubin statistic test in progress ...') 
             
             geom += 1
             lastcheck = k
@@ -578,16 +583,16 @@ def mcmc_negfc_sampling(cubes, angs, psfn, ncomp, plsc, initial_state,
                     series = np.vstack((part1,part2))
                     rhat[j] = gelman_rubin(series)   
                 if verbose:    
-                    print '   r_hat = {}'.format(rhat)
-                    print '   r_hat <= threshold = {}'.format(rhat <= rhat_threshold)
-                    print ''
+                    print('   r_hat = {}'.format(rhat))
+                    print('   r_hat <= threshold = {}'.format(rhat <= rhat_threshold))
+                    print('')
                 # We test the rhat.
                 if (rhat <= rhat_threshold).all(): #and rhat_count < rhat_count_threshold: 
                     rhat_count += 1
                     if rhat_count < rhat_count_threshold:
                         print("Gelman-Rubin test OK {}/{}".format(rhat_count,rhat_count_threshold))
                     elif rhat_count >= rhat_count_threshold:
-                        print '... ==> convergence reached'
+                        print('... ==> convergence reached')
                         konvergence = k
                         stop = konvergence + supp                       
                 #elif (rhat <= rhat_threshold).all() and rhat_count >= rhat_count_threshold:
@@ -598,7 +603,7 @@ def mcmc_negfc_sampling(cubes, angs, psfn, ncomp, plsc, initial_state,
                     rhat_count = 0
 
         if (k+1) >= stop: #Then we have reached the maximum number of steps for our Markov chain.
-            print 'We break the loop because we have reached convergence'
+            print('We break the loop because we have reached convergence')
             break
       
     if k == nIterations-1:
@@ -614,7 +619,7 @@ def mcmc_negfc_sampling(cubes, angs, psfn, ncomp, plsc, initial_state,
     else:
         idxzero = chain.shape[1]
     
-    idx = np.amin([np.floor(2e05/nwalkers),np.floor(0.1*idxzero)])
+    idx = np.amin([np.floor(old_div(2e05,nwalkers)),np.floor(0.1*idxzero)])
     if idx == 0:
         isamples = chain[:,0:idxzero,:] 
     else:
@@ -637,7 +642,7 @@ def mcmc_negfc_sampling(cubes, angs, psfn, ncomp, plsc, initial_state,
             myPickler = pickle.Pickler(fileSave)
             myPickler.dump(output)
         
-        print ''        
+        print('')        
         print("The file MCMC_results has been stored in the folder {}".format('results/'+output_file+'/'))
 
     if verbose:
@@ -884,7 +889,7 @@ def confidence(isamples, cfd=68.27, bins=100, gaussianFit=False, weights=None,
             pourcentage = test/surface_total*100.
             if pourcentage > cfd:
                 if verbose:
-                    print 'percentage for {}: {}%'.format(label_file[j],pourcentage)
+                    print('percentage for {}: {}%'.format(label_file[j],pourcentage))
                 break
         n_arg_min = n_arg_sort[:k].min()
         n_arg_max = n_arg_sort[:k+1].max()
@@ -892,7 +897,7 @@ def confidence(isamples, cfd=68.27, bins=100, gaussianFit=False, weights=None,
         if n_arg_min == 0:  n_arg_min += 1
         if n_arg_max == bins:  n_arg_max -= 1        
         
-        val_max[pKey[j]] = bin_vertices[n_arg_sort[0]]+bins_width/2.
+        val_max[pKey[j]] = bin_vertices[n_arg_sort[0]]+old_div(bins_width,2.)
         confidenceInterval[pKey[j]] = np.array([bin_vertices[n_arg_min-1],
                                                 bin_vertices[n_arg_max+1]]-val_max[pKey[j]])
                         
@@ -944,23 +949,23 @@ def confidence(isamples, cfd=68.27, bins=100, gaussianFit=False, weights=None,
         plt.tight_layout(w_pad=0.001)
         
     if verbose:
-        print ''
-        print 'Confidence intervals:'
-        print 'r: {} [{},{}]'.format(val_max['r'],
+        print('')
+        print('Confidence intervals:')
+        print('r: {} [{},{}]'.format(val_max['r'],
                                      confidenceInterval['r'][0],
-                                     confidenceInterval['r'][1])
-        print 'theta: {} [{},{}]'.format(val_max['theta'],
+                                     confidenceInterval['r'][1]))
+        print('theta: {} [{},{}]'.format(val_max['theta'],
                                          confidenceInterval['theta'][0],
-                                         confidenceInterval['theta'][1])
-        print 'flux: {} [{},{}]'.format(val_max['f'],
+                                         confidenceInterval['theta'][1]))
+        print('flux: {} [{},{}]'.format(val_max['f'],
                                         confidenceInterval['f'][0],
-                                        confidenceInterval['f'][1])
+                                        confidenceInterval['f'][1]))
         if gaussianFit:
-            print ''
-            print 'Gaussian fit results:'
-            print 'r: {} +-{}'.format(mu[0],sigma[0])
-            print 'theta: {} +-{}'.format(mu[1],sigma[1])
-            print 'f: {} +-{}'.format(mu[2],sigma[2])
+            print('')
+            print('Gaussian fit results:')
+            print('r: {} +-{}'.format(mu[0],sigma[0]))
+            print('theta: {} +-{}'.format(mu[1],sigma[1]))
+            print('f: {} +-{}'.format(mu[2],sigma[2]))
 
     ##############################################
     ##  Write inference results in a text file  ##

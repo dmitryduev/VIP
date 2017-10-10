@@ -11,5 +11,5 @@ Subpackage ``fits`` includes fits handling functions:
     XPAget commands to DS9.
 """
 
-from fits import *
-from vipds9_source import *
+from .fits import *
+from .vipds9_source import *

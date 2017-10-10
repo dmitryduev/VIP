@@ -3,6 +3,11 @@
 """
 Module with frame de-rotation routine for ADI.
 """
+from __future__ import division
+from __future__ import print_function
+from builtins import str
+from builtins import range
+from past.utils import old_div
 __author__ = 'V. Christiaens @ UChile/ULg, C. Gomez @ ULg'
 __all__ = ['compute_paral_angles',
            'compute_derot_angles_PA',
@@ -59,8 +64,8 @@ def compute_paral_angles(header, latitude, ra_key, dec_key, lst_key,
     dec_curr = coor_curr.dec
         
     lst_split = header[lst_key].split(':')
-    lst = float(lst_split[0])+float(lst_split[1])/60+float(lst_split[2])/3600
-    exp_delay = (header[acqtime_key] * 0.5) / 3600
+    lst = float(lst_split[0])+old_div(float(lst_split[1]),60)+old_div(float(lst_split[2]),3600)
+    exp_delay = old_div((header[acqtime_key] * 0.5), 3600)
     # solar to sidereal time
     exp_delay = exp_delay*1.0027                                                
     
@@ -178,21 +183,21 @@ def compute_derot_angles_PA(objname_tmp_A,digit_format=3,objname_tmp_B='',
     # Write the vector containing parallactic angles
     rot = np.zeros(len(list_obj))
     for ii in range(len(list_obj)):
-        rot[ii]=0.-(posang_st[ii]+posang_nd[ii])/2.
+        rot[ii]=0.-old_div((posang_st[ii]+posang_nd[ii]),2.)
 
     # Check and correct to output at the right format
     rot = check_PA_vector(rot,'deg')
 
     if verbose:
-        print "This is the list of angles to be applied: "
+        print("This is the list of angles to be applied: ")
         for ii in range(len(list_obj)):
-            print ii, ' -> ', rot[ii]
+            print(ii, ' -> ', rot[ii])
 
     if writing:
         if outpath == '' or outpath is None: outpath=inpath
         f=open(outpath+'Parallactic_angles.txt','w')
         for ii in range(len(list_obj)):
-            print >>f, rot[ii]
+            print(rot[ii], file=f)
         f.close()
 
     return rot
@@ -328,20 +333,20 @@ def compute_derot_angles_CD(objname_tmp_A, digit_format=3,objname_tmp_B='',
     if skew: rot2 = check_PA_vector(rot2,'rad')
 
     if verbose:
-        print "This is the list of angles to be applied: "
+        print("This is the list of angles to be applied: ")
         for ii in range(len(cd1_1)):
-            print ii, ' -> ', rot[ii]
-            if skew: print 'rot2: ', ii, ' -> ', rot2[ii]
+            print(ii, ' -> ', rot[ii])
+            if skew: print('rot2: ', ii, ' -> ', rot2[ii])
 
     if writing:
         if outpath == '' or outpath is None: outpath=inpath
         f=open(outpath+'Parallactic_angles.txt','w')
         if skew:
             for ii in range(len(cd1_1)):
-                print >>f, rot[ii], rot2[ii]
+                print(rot[ii], rot2[ii], file=f)
         else:
             for ii in range(len(cd1_1)):
-                print >>f, rot[ii]
+                print(rot[ii], file=f)
         f.close()
 
 

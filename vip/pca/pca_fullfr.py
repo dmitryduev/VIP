@@ -6,6 +6,9 @@ PCA algorithm performed on full frame for ADI, RDI or SDI (IFS data).
 
 from __future__ import division, print_function
 
+from builtins import zip
+from builtins import str
+from builtins import range
 __author__ = 'C. Gomez @ ULg'
 __all__ = ['pca',
            'pca_incremental',
@@ -471,7 +474,7 @@ def pca(cube, angle_list=None, cube_ref=None, scale_list=None, ncomp=1, ncomp2=1
     
     
     
-def pca_optimize_snr(cube, angle_list, (source_xy), fwhm, cube_ref=None,
+def pca_optimize_snr(cube, angle_list, xxx_todo_changeme, fwhm, cube_ref=None,
                      mode='fullfr', annulus_width=20, range_pcs=None,
                      svd_mode='lapack', scaling=None, mask_center_px=None, 
                      fmerit='px', min_snr=0, collapse='median', verbose=True, 
@@ -554,6 +557,7 @@ def pca_optimize_snr(cube, angle_list, (source_xy), fwhm, cube_ref=None,
     If full_output is True, the final processed frame, and a cube with all the
     PCA frames are returned along with the optimal number of PCs.
     """    
+    (source_xy) = xxx_todo_changeme
     def truncate_svd_get_finframe(matrix, angle_list, ncomp, V):
         """ Projection, subtraction, derotation plus combination in one frame.
         Only for full-frame"""

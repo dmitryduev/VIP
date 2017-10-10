@@ -4,7 +4,9 @@
 LLSG (Gomez Gonzalez et al. 2016)
 """
 from __future__ import division
+from __future__ import print_function
 
+from builtins import range
 __author__ = 'C. Gomez @ ULg'
 __all__ = ['llsg']
 
@@ -139,7 +141,7 @@ def llsg(cube, angle_list, fwhm, rank=10, thresh=1, max_iter=10,
             res = pool.map(EFT, itt.izip(itt.repeat(_llsg_subf), 
                                          itt.repeat(cube),
                                          itt.repeat(indices),
-                                         range(4), itt.repeat(rank),
+                                         list(range(4)), itt.repeat(rank),
                                          itt.repeat(low_rank_mode),
                                          itt.repeat(thresh),
                                          itt.repeat(thresh_mode),

@@ -6,6 +6,8 @@ Distance between images.
 
 from __future__ import division
 
+from builtins import str
+from builtins import range
 __author__ = 'C. Gomez @ ULg'
 __all__ = ['cube_distance',
            'cube_distance_to_frame']
@@ -108,7 +110,7 @@ def cube_distance(array, frame, mode='full', dist='sad', inradius=None,
     mean_cor = np.mean(lista)
     if plot:
         _, ax = plt.subplots(figsize=(12,6))
-        x = range(len(lista))
+        x = list(range(len(lista)))
         ax.plot(x, lista, '-', color='blue', alpha=0.3)
         ax.plot(x, lista, '.', color='blue', alpha=0.5)
         ax.vlines(frame, ymin=np.nanmin(lista), ymax=np.nanmax(lista),
@@ -231,7 +233,7 @@ def cube_distance_to_frame(array, frame_ref, mode='full', dist='sad',
     mean_cor = np.mean(lista)
     if plot:
         _, ax = plt.subplots(figsize=(12,6))
-        x = range(len(lista))
+        x = list(range(len(lista)))
         ax.plot(x, lista, '-', color='blue', alpha=0.3)
         ax.plot(x, lista, '.', color='blue', alpha=0.5)
         ax.hlines(median_cor, xmin=-1, xmax=n+1, colors='purple',

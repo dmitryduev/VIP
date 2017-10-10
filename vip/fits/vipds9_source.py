@@ -3,7 +3,10 @@
 """
 Module with various DS9 related functions.
 """
+from __future__ import print_function
 
+from builtins import str
+from builtins import object
 __author__ = 'C. Gomez @ ULg'
 
 import numpy as np
@@ -17,8 +20,8 @@ if not error:
     __all__ = ['vipDS9']
 else:
     __all__ = []
-    print error
-    print 'vipDS9 class that controls DS9 will not be available \n'
+    print(error)
+    print('vipDS9 class that controls DS9 will not be available \n')
     
 
 
@@ -102,7 +105,7 @@ class vipDS9(object):
         preserved.
         """
         self.win = DS9Win(self.name, doOpen=True) # creates/detects the VIP ds9
-        if kwargs.has_key('keepwin'):
+        if 'keepwin' in kwargs:
             if kwargs['keepwin']:  pass
             else:  self.delete_frame(allfr=True)
         else: 
@@ -169,18 +172,18 @@ class vipDS9(object):
         self.win = DS9Win(self.name, doOpen=True)
         self.win.xpaset('mode region')
         if cmd is not None:
-            print 'Executing region command'
+            print('Executing region command')
             self.win.xpaset('regions command "{'+str(cmd)+'}"')
         if liston:
             self.win.xpaset('regions list')
         if savein is not None:
-            print 'Saving region file in {}'.format(savein)
+            print('Saving region file in {}'.format(savein))
             self.win.xpaset('regions save '+str(savein))
         if loadfrom is not None:
-            print 'Loading region file from {}'.format(loadfrom)
+            print('Loading region file from {}'.format(loadfrom))
             self.win.xpaset('regions load '+str(loadfrom))
         if get:
-            print 'Getting regions'
+            print('Getting regions')
             return self.win.xpaget('regions') 
         
     def rotate(self, value=None):

@@ -5,7 +5,10 @@ Module with functions for outlier frame detection.
 """
 
 from __future__ import division
+from __future__ import print_function
 
+from builtins import str
+from builtins import range
 __author__ = 'C. Gomez @ ULg'
 __all__ = ['cube_detect_badfr_pxstats',
            'cube_detect_badfr_ellipticipy',
@@ -109,7 +112,7 @@ def cube_detect_badfr_pxstats(array, mode='annulus', in_radius=10, width=10,
         bad = len(bad_index_list)
         percent_bad_frames = (bad*100)/n
         msg1 = "Done detecting bad frames from cube: {:} out of {:} ({:.3}%)"
-        print msg1.format(bad, n, percent_bad_frames) 
+        print(msg1.format(bad, n, percent_bad_frames)) 
 
     if plot:
         plt.figure(figsize=(10, 6), dpi=100)
@@ -209,7 +212,7 @@ def cube_detect_badfr_ellipticipy(array, fwhm, roundlo=-0.2, roundhi=0.2,
         bad = len(bad_index_list)
         percent_bad_frames = (bad*100)/n
         msg1 = "Done detecting bad frames from cube: {:} out of {:} ({:.3}%)"
-        print msg1.format(bad, n, percent_bad_frames) 
+        print(msg1.format(bad, n, percent_bad_frames)) 
     
     if verbose:  timing(start_time)
     
@@ -280,12 +283,12 @@ def cube_detect_badfr_correlation(array, frame_ref, crop_size=30, dist='pearson'
         bad = len(bad_index_list)
         percent_bad_frames = (bad*100)/n
         msg1 = "Done detecting bad frames from cube: {:} out of {:} ({:.3}%)"
-        print msg1.format(bad, n, percent_bad_frames) 
+        print(msg1.format(bad, n, percent_bad_frames)) 
     
     if plot:
         lista = distances
         _, ax = plt.subplots(figsize=(10, 6), dpi=100)
-        x = range(len(lista))
+        x = list(range(len(lista)))
         ax.plot(x, lista, '-', color='blue', alpha=0.3)
         if n>5000:
             ax.plot(x, lista, ',', color='blue', alpha=0.5)

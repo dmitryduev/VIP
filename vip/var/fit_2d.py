@@ -3,7 +3,10 @@
 """
 2d fitting.
 """
+from __future__ import division
+from __future__ import print_function
 
+from past.utils import old_div
 __author__ = 'C. Gomez @ ULg'
 __all__ = ['fit_2dgaussian',
            'fit_2dmoffat']
@@ -128,16 +131,16 @@ def fit_2dgaussian(array, crop=False, cent=None, cropsize=15, fwhmx=4, fwhmy=4,
         else: msg = 'Subimage (no threshold) / Model / Residuals'
         pp_subplots(psf_subimage, fit(x, y), psf_subimage-fit(x, y), 
                     colorb=True, grid=True, title=msg)
-        print 'FWHM_y =', fwhm_y
-        print 'FWHM_x =', fwhm_x
-        print
-        print 'centroid y =', mean_y
-        print 'centroid x =', mean_x
-        print 'centroid y subim =', fit.y_mean.value
-        print 'centroid x subim =', fit.x_mean.value
-        print 
-        print 'peak =', amplitude
-        print 'theta =', theta
+        print('FWHM_y =', fwhm_y)
+        print('FWHM_x =', fwhm_x)
+        print()
+        print('centroid y =', mean_y)
+        print('centroid x =', mean_x)
+        print('centroid y subim =', fit.y_mean.value)
+        print('centroid x subim =', fit.x_mean.value)
+        print() 
+        print('peak =', amplitude)
+        print('theta =', theta)
     
     if full_output:
         return pd.DataFrame({'centroid_y': mean_y, 'centroid_x': mean_x,
@@ -189,19 +192,19 @@ def fit_2dmoffat(array, yy, xx, full_output=False,fwhm=4):
         floor = np.mean(array.flatten())  # median value is 32767 or 65535 --> height=0
         height = maxi - floor
 
-    mean_y = (np.shape(array)[0]-1)/2
-    mean_x = (np.shape(array)[1]-1)/2
+    mean_y = old_div((np.shape(array)[0]-1),2)
+    mean_x = old_div((np.shape(array)[1]-1),2)
 
-    fwhm = np.sqrt(np.sum((array>floor+height/2.).flatten()))
+    fwhm = np.sqrt(np.sum((array>floor+old_div(height,2.)).flatten()))
 
     beta = 4
     
     p0 = floor, height, mean_y, mean_x, fwhm, beta
 
     def moffat(floor, height, mean_y, mean_x, fwhm, beta): # def Moffat function
-        alpha = 0.5*fwhm/np.sqrt(2.**(1./beta)-1.)    
-        return lambda y,x: floor + height/((1.+(((x-mean_x)**2+(y-mean_y)**2)/\
-                                                alpha**2.))**beta)
+        alpha = 0.5*fwhm/np.sqrt(2.**(old_div(1.,beta))-1.)    
+        return lambda y,x: floor + old_div(height,((1.+(old_div(((x-mean_x)**2+(y-mean_y)**2),\
+                                                alpha**2.)))**beta))
 
     def err(p,data):
         return np.ravel(moffat(*p)(*np.indices(data.shape))-data)

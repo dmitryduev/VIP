@@ -7,6 +7,7 @@ nested sampling (``nestle``).
 
 from __future__ import print_function
 
+from builtins import range
 __author__ = 'C. Gomez @ ULg',
 __all__ = ['nested_negfc_sampling',
            'nested_sampling_results']
@@ -221,7 +222,7 @@ def nested_sampling_results(ns_object, burnin=0.4, bins=None):
     """
     res = ns_object
     nsamples = res.samples.shape[0]
-    indburnin = np.percentile(np.array(range(nsamples)), burnin * 100)
+    indburnin = np.percentile(np.array(list(range(nsamples))), burnin * 100)
 
     print(res.summary())
 

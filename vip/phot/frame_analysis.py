@@ -7,6 +7,7 @@
 from __future__ import division
 from __future__ import print_function
 
+from builtins import zip
 __author__ = 'C. Gomez @ ULg'
 __all__ = ['frame_quick_report']
 

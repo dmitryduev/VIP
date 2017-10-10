@@ -6,6 +6,7 @@ Module with local smart pca (annulus-wise) serial and parallel implementations.
 
 from __future__ import division, print_function
 
+from builtins import range
 __author__ = 'C. Gomez @ ULg'
 __all__ = ['pca_adi_annular',
            'pca_rdi_annular']
@@ -458,8 +459,8 @@ def find_indices(angle_list, frame, thr, truncate):
         else:
             index_foll += 1
     
-    half1 = range(0,index_prev)
-    half2 = range(index_foll,n)
+    half1 = list(range(0,index_prev))
+    half2 = list(range(index_foll,n))
     
     # This truncation is done on the annuli after 15*FWHM and the goal is to 
     # keep min(num_frames/2, 200) in the library after discarding those based on
@@ -467,11 +468,11 @@ def find_indices(angle_list, frame, thr, truncate):
     if truncate:
         thr = min(int(n/2), 200)                                                # TODO: 200 is optimal? new parameter? 
         if frame < thr: 
-            half1 = range(max(0,index_prev-int(thr/2)), index_prev)
-            half2 = range(index_foll, min(index_foll+thr-len(half1),n))
+            half1 = list(range(max(0,index_prev-int(thr/2)), index_prev))
+            half2 = list(range(index_foll, min(index_foll+thr-len(half1),n)))
         else:
-            half2 = range(index_foll, min(n, int(thr/2+index_foll)))
-            half1 = range(max(0,index_prev-thr+len(half2)), index_prev)
+            half2 = list(range(index_foll, min(n, int(thr/2+index_foll))))
+            half1 = list(range(max(0,index_prev-thr+len(half2)), index_prev))
     return np.array(half1+half2)
 
 
@@ -509,7 +510,7 @@ def do_pca_loop(matrix, yy, xx, nproc, angle_list, fwhm, pa_threshold, scaling,
         pool = Pool(processes=int(nproc))
         res = pool.map(EFT, itt.izip(itt.repeat(do_pca_patch), 
                                      itt.repeat(matrix_ann),
-                                     range(n), itt.repeat(angle_list),
+                                     list(range(n)), itt.repeat(angle_list),
                                      itt.repeat(fwhm),
                                      itt.repeat(pa_threshold),
                                      itt.repeat(scaling),

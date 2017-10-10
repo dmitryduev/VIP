@@ -5,7 +5,9 @@ Module containing functions for cubes frame registration.
 """
 
 from __future__ import division
+from __future__ import print_function
 
+from builtins import range
 __author__ = 'C. Gomez @ ULg, V. Christiaens @ ULg/UChile'
 __all__ = ['frame_shift',
            'frame_center_radon',
@@ -260,11 +262,11 @@ def frame_center_satspots(array, xy, subim_size=19, sigfactor=6, shift=False,
     
     if debug: 
         pp_subplots(si1, si2, si3, si4, colorb=True)
-        print 'Centroids X,Y:'
-        print cent2dgx_1, cent2dgy_1
-        print cent2dgx_2, cent2dgy_2
-        print cent2dgx_3, cent2dgy_3
-        print cent2dgx_4, cent2dgy_4
+        print('Centroids X,Y:')
+        print(cent2dgx_1, cent2dgy_1)
+        print(cent2dgx_2, cent2dgy_2)
+        print(cent2dgx_3, cent2dgy_3)
+        print(cent2dgx_4, cent2dgy_4)
 
     L1 = line([cent2dgx_1, cent2dgy_1], [cent2dgx_4, cent2dgy_4])
     L2 = line([cent2dgx_2, cent2dgy_2], [cent2dgx_3, cent2dgy_3])
@@ -274,8 +276,8 @@ def frame_center_satspots(array, xy, subim_size=19, sigfactor=6, shift=False,
         shiftx = cx-R[0]
         shifty = cy-R[1]
         if debug: 
-            print '\nIntersection coordinates (X,Y):', R[0], R[1], '\n'
-            print 'Shifts (X,Y):', shiftx, shifty
+            print('\nIntersection coordinates (X,Y):', R[0], R[1], '\n')
+            print('Shifts (X,Y):', shiftx, shifty)
         
         if shift:
             array_rec = frame_shift(array, shifty, shiftx)
@@ -283,7 +285,7 @@ def frame_center_satspots(array, xy, subim_size=19, sigfactor=6, shift=False,
         else:
             return shifty, shiftx
     else:
-        print 'Something went wrong, no intersection found.'
+        print('Something went wrong, no intersection found.')
         return 0
 
 
@@ -349,12 +351,12 @@ def cube_recenter_satspots(array, xy, subim_size=19, sigfactor=6, debug=False):
     plt.plot(shift_x, '.-', lw=0.5, color='green', label='Shifts X')
     plt.plot(shift_y, '.-', lw=0.5, color='blue', label='Shifts Y')
     plt.xlim(0, shift_y.shape[0]+5)
-    _=plt.xticks(range(0,n_frames,5))
+    _=plt.xticks(list(range(0,n_frames,5)))
     plt.legend()
 
-    print 'AVE X,Y', np.mean(shift_x), np.mean(shift_y)
-    print 'MED X,Y', np.median(shift_x), np.median(shift_y)
-    print 'STD X,Y', np.std(shift_x), np.std(shift_y)
+    print('AVE X,Y', np.mean(shift_x), np.mean(shift_y))
+    print('MED X,Y', np.median(shift_x), np.median(shift_y))
+    print('STD X,Y', np.std(shift_x), np.std(shift_y))
 
     plt.figure()
     b = int(np.sqrt(n_frames))
@@ -429,7 +431,7 @@ def frame_center_radon(array, cropsize=101, hsize=0.4, step=0.01,
         radint = 0
     else:
         if not isinstance(mask_center, int):
-            raise(TypeError('Mask_center must be either None or an integer'))
+            raise TypeError
         radint = mask_center
     
     coords = [(y,x) for y in listyx for x in listyx]
@@ -450,12 +452,12 @@ def frame_center_radon(array, cropsize=101, hsize=0.4, step=0.01,
                                            endpoint=False)))             
             sinogram = radon(frame, theta=theta, circle=True)
             pp_subplots(frame, sinogram)
-            print np.sum(np.abs(sinogram[cent,:]))
+            print(np.sum(np.abs(sinogram[cent,:])))
         else:
             theta = np.linspace(start=0., stop=360., num=cent*2, endpoint=False)
             sinogram = radon(frame, theta=theta, circle=True)
             pp_subplots(frame, sinogram)
-            print np.sum(np.abs(sinogram[cent,:]))
+            print(np.sum(np.abs(sinogram[cent,:])))
 
     if not nproc:   # Hyper-threading "duplicates" the cores -> cpu_count/2
         nproc = (cpu_count()/2) 
@@ -471,7 +473,7 @@ def frame_center_radon(array, cropsize=101, hsize=0.4, step=0.01,
         
     if verbose:  
         msg = 'Done {} radon transform calls distributed in {} processes'
-        print msg.format(len(coords), int(nproc))
+        print(msg.format(len(coords), int(nproc)))
 
     cost_bound = costf.reshape(listyx.shape[0], listyx.shape[0])
     if plot:
@@ -496,10 +498,10 @@ def frame_center_radon(array, cropsize=101, hsize=0.4, step=0.01,
     optimx = x_grid[0, argmx]  
     
     if verbose: 
-        print 'Cost function max: {}'.format(costf.max())
-        print 'Cost function # maxima: {}'.format(num_max)
+        print('Cost function max: {}'.format(costf.max()))
+        print('Cost function # maxima: {}'.format(num_max))
         msg = 'Finished grid search radon optimization. Y={:.5f}, X={:.5f}'
-        print msg.format(optimy, optimx)
+        print(msg.format(optimy, optimx))
         timing(start_time)
     
     if full_output:
@@ -680,18 +682,18 @@ def cube_recenter_dft_upsampling(array, cy_1, cx_1, negative=False, fwhm=4,
         y[0] = cy-y1
         array_rec[0] = frame_shift(array_rec[0], shift_y=y[0], shift_x=x[0])
         if verbose:
-            print "\nShift for first frame X,Y=({:.3f},{:.3f})".format(x[0],y[0])
-            print "The rest of the frames will be shifted by cross-correlation" \
-                  " with the first one"
+            print("\nShift for first frame X,Y=({:.3f},{:.3f})".format(x[0],y[0]))
+            print("The rest of the frames will be shifted by cross-correlation" \
+                  " with the first one")
         if debug:
             pp_subplots(frame_crop(array[0], size, verbose=False),
                         frame_crop(array_rec[0], size, verbose=False),
                         grid=True, title='original / shifted 1st frame subimage')
     else:
         if verbose:
-            print "It's assumed that the first frame is well centered"
-            print "The rest of the frames will be shifted by cross-correlation" \
-                  " with the first one"
+            print("It's assumed that the first frame is well centered")
+            print("The rest of the frames will be shifted by cross-correlation" \
+                  " with the first one")
         x[0] = cx
         y[0] = cy
     
@@ -708,9 +710,9 @@ def cube_recenter_dft_upsampling(array, cy_1, cx_1, negative=False, fwhm=4,
         bar.update()
 
     if debug:
-        print "\nShifts in X and Y"
+        print("\nShifts in X and Y")
         for i in range(n_frames):
-            print x[i], y[i]
+            print(x[i], y[i])
         
     if verbose:  timing(start_time)
         
@@ -821,7 +823,7 @@ def cube_recenter_gauss2d_fit(array, xy, fwhm=4, subi_size=5, nproc=1,
         pool = Pool(processes=int(nproc))  
         res = pool.map(EFT, itt.izip(itt.repeat(_centroid_2dg_frame),
                                      itt.repeat(array),
-                                     range(n_frames),
+                                     list(range(n_frames)),
                                      subfr_sz, 
                                      itt.repeat(pos_y), 
                                      itt.repeat(pos_x),
@@ -843,8 +845,8 @@ def cube_recenter_gauss2d_fit(array, xy, fwhm=4, subi_size=5, nproc=1,
     bar2 = pyprind.ProgBar(n_frames, stream=1, title='Shifting the frames')
     for i in range(n_frames):
         if debug:
-            print "\nShifts in X and Y"
-            print x[i], y[i]
+            print("\nShifts in X and Y")
+            print(x[i], y[i])
         array_recentered[i] = frame_shift(array[i], y[i], x[i])
         bar2.update()
         
@@ -972,7 +974,7 @@ def cube_recenter_moffat2d_fit(array, pos_y, pos_x, fwhm=4, subi_size=5,
         pool = Pool(processes=int(nproc))  
         res = pool.map(EFT,itt.izip(itt.repeat(_centroid_2dm_frame),
                                     itt.repeat(array), 
-                                    range(n_frames),
+                                    list(range(n_frames)),
                                     size.tolist(), 
                                     pos_y.tolist(), 
                                     pos_x.tolist(), 
@@ -987,8 +989,8 @@ def cube_recenter_moffat2d_fit(array, pos_y, pos_x, fwhm=4, subi_size=5,
         
     for i in range(n_frames):
         if debug:
-            print "\nShifts in X and Y"
-            print x[i], y[i]
+            print("\nShifts in X and Y")
+            print(x[i], y[i])
         array_recentered[i] = frame_shift(array[i], y[i], x[i])
 
     if verbose:  timing(start_time)

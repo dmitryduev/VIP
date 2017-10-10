@@ -6,6 +6,7 @@ Module with sky subtraction function.
 
 from __future__ import division
 
+from builtins import range
 __author__ = 'C. Gomez @ ULg'
 __all__ = ['cube_subtract_sky_pca']
 

@@ -7,6 +7,7 @@ Module with helping functions.
 from __future__ import division
 from __future__ import print_function
 
+from builtins import range
 __author__ = 'C. Gomez @ ULg'
 __all__ = ['matrix_scaling',
            'prepare_matrix',
@@ -337,7 +338,7 @@ def svd_wrapper(matrix, mode, ncomp, debug, verbose, usv=False):
         fig = plt.figure(figsize=(6,3))
         fig.subplots_adjust(wspace=0.4)
         ax1 = plt.subplot2grid((1,3), (0,0), colspan=2)
-        ax1.step(range(explained_variance_ratio.shape[0]), 
+        ax1.step(list(range(explained_variance_ratio.shape[0])), 
                  explained_variance_ratio, alpha=alpha, where='mid', 
                  label='Individual EVR', lw=lw)
         ax1.plot(ratio_cumsum, '.-', alpha=alpha, 
@@ -352,7 +353,7 @@ def svd_wrapper(matrix, mode, ncomp, debug, verbose, usv=False):
         trunc = 20
         ax2 = plt.subplot2grid((1,3), (0,2), colspan=1)
         #plt.setp(ax2.get_yticklabels(), visible=False)
-        ax2.step(range(trunc), explained_variance_ratio[:trunc], alpha=alpha, 
+        ax2.step(list(range(trunc)), explained_variance_ratio[:trunc], alpha=alpha, 
                  where='mid', lw=lw)
         ax2.plot(ratio_cumsum[:trunc], '.-', alpha=alpha, lw=lw)
         ax2.set_xlabel('Principal components')

@@ -5,7 +5,10 @@ Module with various functions.
 """
 
 from __future__ import division
+from __future__ import print_function
 
+from builtins import str
+from builtins import range
 __author__ = 'C. Gomez @ ULg'
 __all__ = ['dist',
            'frame_center',
@@ -109,7 +112,7 @@ def frame_center(array, verbose=False):
 
     cy = int(cy); cx = int(cx)
     if verbose:
-        print 'Center px coordinates at x,y = ({:},{:})'.format(cy, cx)
+        print('Center px coordinates at x,y = ({:},{:})'.format(cy, cx))
     return cy, cx
 
     
@@ -231,7 +234,7 @@ def get_square_robust(array, size, y, x, position=False,
             msg = "!!! WARNING: The size of the square sub-array was reduced"+\
                   " to fit within the borders of the array. Now, wings = "+\
                   str(wing_bef)+"px x "+str(wing_aft)+ "px !!!"
-            print msg
+            print(msg)
         elif out_borders=='rectangular':
             wing_y = min(y,n_y-1-y)
             wing_x = min(x,n_x-1-x)
@@ -244,7 +247,7 @@ def get_square_robust(array, size, y, x, position=False,
                   "rectangular sub-array to fit within the borders of the "+\
                   "array. Now, [y_init,yfin]= ["+ str(y_init)+", "+ str(y_fin)+\
                   "] and [x_init,x_fin] = ["+ str(x_init)+", "+ str(x_fin)+ "]."
-            print msg
+            print(msg)
             if position:
                 return array_view, y_init, x_init
             else:
@@ -252,7 +255,7 @@ def get_square_robust(array, size, y, x, position=False,
         else:
             msg = "!!! WARNING: The square sub-array was not changed but it"+\
                   " exceeds the borders of the array."
-            print msg
+            print(msg)
 
     if return_wings: return wing_bef,wing_aft
     

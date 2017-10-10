@@ -3,6 +3,7 @@
 """
 Module with frame de-rotation routine for ADI.
 """
+from builtins import range
 __author__ = 'C. Gomez @ ULg'
 __all__ = ['cube_derotate',
            'frame_rotate']
