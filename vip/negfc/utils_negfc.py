@@ -13,7 +13,7 @@ __all__ = ['cube_planet_free']
 import numpy as np
 from ..phot import inject_fcs_cube
 import math
-from matplotlib.pyplot import plot, xlim, ylim, hold, axes, gca, show
+from matplotlib.pyplot import plot, xlim, ylim, axes, gca, show
 
 
 def cube_planet_free(planet_parameter, cube, angs, psfn, plsc):
@@ -100,8 +100,7 @@ def radial_to_eq(r=1, t=0, rError=0, tError=0, display=False):
     decErrorInf = v - np.amin(y)
     decErrorSup = np.amax(y) - v        
 
-    if display:        
-        hold(True)
+    if display:
         plot(u,v,'ks',x,y,'r')        
         plot((r+rError) * np.cos(nu), (r+rError) * np.sin(nu),'ob',
              (r-rError) * np.cos(nu), (r-rError) * np.sin(nu),'ob')
