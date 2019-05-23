@@ -27,7 +27,7 @@ import datetime
 import corner
 from matplotlib import pyplot as plt
 from matplotlib.ticker import MaxNLocator
-from matplotlib.mlab import normpdf
+#from matplotlib.mlab import normpdf
 from scipy.stats import norm
 from ..fits import open_adicube, open_fits
 from ..phot import inject_fcs_cube
@@ -926,7 +926,7 @@ def confidence(isamples, cfd=68.27, bins=100, gaussianFit=False, weights=None,
             _= ax[1][j].hist(isamples[:,j], bins, normed=1, weights=weights, 
                              facecolor='gray', edgecolor='darkgray', 
                              histtype='step')
-            y = normpdf( bins_fit, mu[j], sigma[j])
+            y = norm.pdf( bins_fit, mu[j], sigma[j])
             ax[1][j].plot(bins_fit, y, 'r--', linewidth=2, alpha=0.7) 
             
             ax[1][j].set_xlabel(label[j])
